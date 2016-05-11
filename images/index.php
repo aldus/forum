@@ -4,8 +4,8 @@
  *  @module         Forum
  *  @version        see info.php of this module
  *  @authors        Julian Schuh, Bernd Michna, "Herr Rilke", Dietrich Roland Pehlke (last)
- *  @copyright      2004-2014 Ryan Djurovich, Chio Maisriml, Thomas Hornik, Dietrich Roland Pehlke
- *  @license        GNU General Public License
+ *  @copyright      2004-2016 Ryan Djurovich, Chio Maisriml, Thomas Hornik, Dietrich Roland Pehlke
+ *  @license        see info.php of this module
  *  @license terms  see info.php of this module
  *  @platform       see info.php of this module
  *
