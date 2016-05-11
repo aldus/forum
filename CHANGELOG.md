@@ -15,6 +15,7 @@ WB User: 	BerndJM, herr rilke
 
 Voraussetzungen im Template
 ++++++++++++++++++++++++++++++++++++++
+````code
 <?php
 	if(function_exists(\'register_frontend_modfiles\')) {
 	register_frontend_modfiles(\'css\');
@@ -22,7 +23,7 @@ Voraussetzungen im Template
 	register_frontend_modfiles(\'jquery\');
 	}
 ?>
-
+````
 0.5.4 00.02.2014
 ++++++++++++++++++++++++++++++++++++++
 ! fixed bug with security token reportet by dermartine http://www.websitebaker.org/forum/index.php/topic,26878.msg184720.html#msg184720
@@ -58,28 +59,28 @@ Voraussetzungen im Template
 ! fixed some notices concerning email notifications
 
 
-Ver‰nderungen
+Veränderungen
 ++++++++++++++++++++++++++++++++++++++
-(-) bestehende Suchfunktion f¸r die Integration in
+(-) bestehende Suchfunktion für die Integration in
 	die SiteSearch deaktiviert, da sie bei mir
-	zu Fehlern in WB 2.8 f¸hrte
+	zu Fehlern in WB 2.8 führte
 
 
 Neu
 +++++++++++++++++++++++++++++++++++++
 (+) eigene Suchfunktion (MySQL fulltext) mit mind.
-	3 Zeichen ¸ber Thread, Title und Text
+	3 Zeichen über Thread, Title und Text
 
 (+) Die Ergebnisse der Suchfunktion verlinken so,
-	dass die Pagination in l‰ngeren Threads
-	unterst¸tzt wird
+	dass die Pagination in längeren Threads
+	unterstützt wird
 
-(+) Die Suchfunktion l‰ﬂt sich ¸ber die config.php
+(+) Die Suchfunktion läﬂt sich über die config.php
 	zu- oder abschalten
 
-(+) Versand von eMails bei neuen Beitr‰gen an
+(+) Versand von eMails bei neuen Beiträgen an
 	alle anderen Beitragenden des Threads.
-	L‰ﬂt sich ¸ber die config.php 	zu- oder
+	Läﬂt sich über die config.php 	zu- oder
 	abschalten
 
 (+) Im Backend werden die bestehenden Foren
@@ -88,21 +89,23 @@ Neu
 	entsprechender CSS Klassen.
 
 (+) Neue Meldungen und Labels in den Sprachfiles
-	(warten bei Bedarf auf ‹bersetzung nach
+	(warten bei Bedarf auf Übersetzung nach
 	 EN und NL)
 
 (+) Extra-Modul "Last Forum Entries" zeigt die
-	letzten Beitr‰ge an (benˆtigt diese
+	letzten Beiträge an (benˆtigt diese
 	Version 0.3), Pagination des Ziels wird
-	unterst¸tzt
+	unterstützt
 
 
  ###############################
  CSS
  neue IDs und Klassen
  ---------------------
+````code
  div #mod_last_forum_entries
  p.mod_last_forum_entries_forum
  p.mod_last_forum_entries_title
  p.mod_last_forum_entries_text
  span.mod_last_forum_entries_link
+````
