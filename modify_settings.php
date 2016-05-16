@@ -47,9 +47,9 @@ global $parser, $loader,$twig_modul_namespace;
 require( dirname(__FILE__)."/register_parser.php" );
 
 // check if backend.css file needs to be included into the <body></body> of modify.php
-if(!method_exists($admin, 'register_backend_modfiles') && file_exists(WB_PATH ."/modules/forum/backend.css")) {
+if(!method_exists($admin, 'register_backend_modfiles') && file_exists(LEPTON_PATH ."/modules/forum/backend.css")) {
 	echo '<style type="text/css">';
-	include(WB_PATH .'/modules/forum/backend.css');
+	include(LEPTON_PATH .'/modules/forum/backend.css');
 	echo "\n</style>\n";
 }
 
@@ -98,8 +98,8 @@ $sGroupSelectHTML .= "\n</select>\n";
 $sHTMLchecked = "checked='checked'";
 
 $page_data = array(
-	'WB_PATH'	=> WB_PATH,
-	'WB_URL'	=> WB_URL,
+	'LEPTON_PATH'	=> LEPTON_PATH,
+	'LEPTON_URL'	=> LEPTON_URL,
 	'ADMIN_URL'	=> ADMIN_URL,
 	'page_id'	=> $page_id,
 	'section_id'	=> $section_id,

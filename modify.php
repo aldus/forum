@@ -30,7 +30,7 @@ if (defined('LEPTON_PATH')) {
 // end include class.secure.php
 
 define('SKIP_CACHE', 1);
-require_once(WB_PATH . '/modules/forum/backend.php');
+require_once(LEPTON_PATH . '/modules/forum/backend.php');
 
 /**
  *        Load Language file
@@ -87,8 +87,8 @@ if($database->is_error()) {
  *	Collecting the values/datas for the page
  */
 $page_data = array(
-	'WB_PATH' => WB_PATH,
-	'WB_URL' => WB_URL,
+	'LEPTON_PATH' => LEPTON_PATH,
+	'LEPTON_URL' => LEPTON_URL,
 	'section_id'	=> $section_id,
 	'page_id'	=> $page_id,
 	'MOD_FORUM_TXT_CREATE_FORUM_B'	=> $MOD_FORUM['TXT_CREATE_FORUM_B'],
@@ -103,3 +103,4 @@ echo $parser->render(
 	$page_data
 );
 
+?>

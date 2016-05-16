@@ -31,7 +31,7 @@ foreach($fields as $name => $options) {
 	${$name} = $temp;
 }
 
-require(WB_PATH . '/modules/admin.php');
+require(LEPTON_PATH . '/modules/admin.php');
 
 /**
  *        Load Language file
@@ -53,7 +53,7 @@ $values = array(
 	"class"			=> $class,
 	"forumid"		=> $forumid,
 	"postid"		=> $postid,
-	"WB_URL"		=> WB_URL,
+	"LEPTON_URL"		=> LEPTON_URL,
 	"FTAN"			=> (true === method_exists($admin, "getFTAN")) ? $admin->getFTAN() : "",
 	"title"			=> $post_data['title'],
 	"text"			=> ($class=="post") 

@@ -100,8 +100,8 @@ elseif (FORUM_DISPLAY_CONTENT == 'view_forum') {
 	} else {
 		include('pagination.php');
 
-		$home_link = WB_URL.PAGES_DIRECTORY.$wb->page['link'].PAGE_EXTENSION;
-		$page_link = WB_URL.'/modules/forum/forum_view.php';
+		$home_link = LEPTON_URL.PAGES_DIRECTORY.$wb->page['link'].PAGE_EXTENSION;
+		$page_link = LEPTON_URL.'/modules/forum/forum_view.php';
 		$query = $database->query("SELECT * FROM ".TABLE_PREFIX."mod_forum_forum WHERE forumid = '". $forum['parentid']."'");
 		$parent = $query->fetchRow();
 
@@ -127,7 +127,7 @@ elseif (FORUM_DISPLAY_CONTENT == 'view_forum') {
 					if (!($forum_sub['readaccess'] == 'both' OR ($forum_sub['readaccess'] == 'reg' AND $wb->get_user_id()) OR ($forum_sub['readaccess'] == 'unreg' AND !$wb->get_user_id()))) {
 						continue;
 					}
-					$subforumbits[] = '<a href="' . WB_URL . '/modules/forum/forum_view.php?sid=' . $section_id . '&amp;pid=' . $page_id . '&amp;fid=' . $subforumid . '">' . $forum_sub['title'] . '</a>';
+					$subforumbits[] = '<a href="' . LEPTON_URL . '/modules/forum/forum_view.php?sid=' . $section_id . '&amp;pid=' . $page_id . '&amp;fid=' . $subforumid . '">' . $forum_sub['title'] . '</a>';
 				}
 				if (sizeof($subforumbits)) {
 					echo '<div class="thread_subs"><strong>'.$MOD_FORUM['TXT_SUBFORUMS_F'].' </strong>' . implode(', ', $subforumbits) . '</div>';
@@ -149,7 +149,7 @@ elseif (FORUM_DISPLAY_CONTENT == 'view_forum') {
 if( true === $user_can_create_topic ) {
 ?>
 				<span class="thread_new_topic">
-					<a href="<?php echo WB_URL; ?>/modules/forum/thread_create.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;fid=<?php echo $forum['forumid']; ?>&amp;ts=<?php echo $t; ?>"><?php echo$MOD_FORUM['TXT_NEW_TOPIC_F']; ?>
+					<a href="<?php echo LEPTON_URL; ?>/modules/forum/thread_create.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;fid=<?php echo $forum['forumid']; ?>&amp;ts=<?php echo $t; ?>"><?php echo$MOD_FORUM['TXT_NEW_TOPIC_F']; ?>
 					</a>
 				</span>
 <?php } ?>
@@ -174,7 +174,7 @@ if( true === $user_can_create_topic ) {
 if( true === $user_can_create_topic ) {
 ?>				
 				<span class="thread_new_topic">
-					<a href="<?php echo WB_URL; ?>/modules/forum/thread_create.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;fid=<?php echo $forum['forumid']; ?>"><?php echo$MOD_FORUM['TXT_NEW_TOPIC_F']; ?>
+					<a href="<?php echo LEPTON_URL; ?>/modules/forum/thread_create.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;fid=<?php echo $forum['forumid']; ?>"><?php echo$MOD_FORUM['TXT_NEW_TOPIC_F']; ?>
 					</a>
 				</span>
 <?php } ?>
@@ -189,7 +189,7 @@ if( true === $user_can_create_topic ) {
 			?>
 				<li class="<?php echo (!$thread['open'] ? 'thread_item_closed' : 'thread_item'); echo ($i++ % 2 ? ' odd' : ' even') ?>">
 					<strong>
-							<a href="<?php echo WB_URL; ?>/modules/forum/thread_view.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;tid=<?php echo $thread['threadid']; ?>"><?php echo htmlspecialchars($thread['title']); ?></a>
+							<a href="<?php echo LEPTON_URL; ?>/modules/forum/thread_view.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;tid=<?php echo $thread['threadid']; ?>"><?php echo htmlspecialchars($thread['title']); ?></a>
 						</strong>
 						<div class="thread_info"><?php echo $MOD_FORUM['TXT_LAST_ARTICLE_F'].' '.date(DATE_FORMAT.', '.TIME_FORMAT, $thread['lastpost'] + TIMEZONE).' - '.$MOD_FORUM['TXT_FROM_F'].' '; ?><?php echo htmlspecialchars($thread['display_name']).' - '.$MOD_FORUM['TXT_RESPONSES_F'].' '. number_format($thread['replycount']); ?></div>
 				</li>
@@ -210,7 +210,7 @@ if( true === $user_can_create_topic ) {
 if( true === $user_can_create_topic ) {
 ?>
 				<span class="thread_new_topic">
-					<a href="<?php echo WB_URL; ?>/modules/forum/thread_create.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;fid=<?php echo $forum['forumid']; ?>"><?php echo$MOD_FORUM['TXT_NEW_TOPIC_F']; ?>
+					<a href="<?php echo LEPTON_URL; ?>/modules/forum/thread_create.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;fid=<?php echo $forum['forumid']; ?>"><?php echo$MOD_FORUM['TXT_NEW_TOPIC_F']; ?>
 					</a>
 				</span>
 <?php } ?>
@@ -301,15 +301,15 @@ elseif (FORUM_DISPLAY_CONTENT == 'create_thread') {
 			}
 			-->
 			</script>
-			<?php 	$home_link = WB_URL.PAGES_DIRECTORY.$wb->page['link'].PAGE_EXTENSION;	?>
+			<?php 	$home_link = LEPTON_URL.PAGES_DIRECTORY.$wb->page['link'].PAGE_EXTENSION;	?>
 			<div class="newtopic_head">
 			<div class="newtopic_head_link"><a href="<?php echo $home_link.'">'.PAGE_TITLE; ?></a></div>
-			<div class="newtopic_head_forum"><a href="<?php echo WB_URL; ?>/modules/forum/forum_view.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;fid=<?php echo $forum['forumid']; ?>"><?php echo $forum['title'] ?></a></div>
+			<div class="newtopic_head_forum"><a href="<?php echo LEPTON_URL; ?>/modules/forum/forum_view.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;fid=<?php echo $forum['forumid']; ?>"><?php echo $forum['title'] ?></a></div>
 
 			<div class="newtopic_head_create"><?php echo $MOD_FORUM['TXT_CREATE_NEW_TOPIC_F']; ?></div>
 
 		</div>
-			<form  class="forum_form" id="addform" name="addform" action="<?php echo WB_URL; ?>/modules/forum/thread_create.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>" method="post">
+			<form  class="forum_form" id="addform" name="addform" action="<?php echo LEPTON_URL; ?>/modules/forum/thread_create.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>" method="post">
 			<input type="hidden" name="forum_ts" value="<?php $t=time(); echo $t; $_SESSION['forum_ts']=$t; ?>" />
 			<table cellpadding="2" cellspacing="0" align="center" border="0" style="width: 100%;">
 			<colgroup>
@@ -330,7 +330,7 @@ elseif (FORUM_DISPLAY_CONTENT == 'create_thread') {
 				if (FORUM_USE_CAPTCHA != false) { ?>
 				<tr>
 					<td><?php $MOD_FORUM['TXT_VERIFICATION_F']; ?></td>
-					<td><?php require_once(WB_PATH.'/include/captcha/captcha.php'); call_captcha(); ?></td>
+					<td><?php require_once(LEPTON_PATH.'/include/captcha/captcha.php'); call_captcha(); ?></td>
 				</tr>
 				<?php
 				}
@@ -343,7 +343,7 @@ elseif (FORUM_DISPLAY_CONTENT == 'create_thread') {
 			<tr <?php echo FORUM_USE_SMILEYS ? '' : 'style="display:none"'?> >
 				<td valign="top"><?php echo $MOD_FORUM['TXT_SMILIES_F']; ?></td>
 				<td>
-					<?php include(WB_PATH . '/modules/forum/smilies.php'); ?>
+					<?php include(LEPTON_PATH . '/modules/forum/smilies.php'); ?>
 				</td>
 			</tr>
 			<tr>
@@ -426,7 +426,7 @@ else if (FORUM_DISPLAY_CONTENT == 'view_thread') {
 
 		// Construct Page Nav
 
-		$page_url = WB_URL.'/modules/forum/thread_view.php?sid='.$section_id.'&amp;pid='.$page_id.'&amp;tid='.$thread['threadid'];
+		$page_url = LEPTON_URL.'/modules/forum/thread_view.php?sid='.$section_id.'&amp;pid='.$page_id.'&amp;tid='.$thread['threadid'];
 
 		$pagenav = '';
 		for($i = 1; $i <= $pagecount; $i++){
@@ -437,12 +437,12 @@ else if (FORUM_DISPLAY_CONTENT == 'view_thread') {
 			}
 		}
 
-$home_link = WB_URL.PAGES_DIRECTORY.$wb->page['link'].PAGE_EXTENSION;
+$home_link = LEPTON_URL.PAGES_DIRECTORY.$wb->page['link'].PAGE_EXTENSION;
 		?>
 		<?php include('include_searchform.php'); ?>
 		<div class="details_head">
 			<div class="details_head_home"><a href="<?php echo $home_link.'">'.PAGE_TITLE; ?></a></div>
-			<div class="details_head_forum"><a href="<?php echo WB_URL; ?>/modules/forum/forum_view.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;fid=<?php echo $forum['forumid']; ?>"><?php echo $forum['title'] ?></a></div>
+			<div class="details_head_forum"><a href="<?php echo LEPTON_URL; ?>/modules/forum/forum_view.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;fid=<?php echo $forum['forumid']; ?>"><?php echo $forum['title'] ?></a></div>
 
 			<div class="details_head_topic"><?php echo $thread['title']; ?></div>
 
@@ -483,8 +483,8 @@ if( 1 == $user['group_id'] ) {
 				{
 				?>
 						<span style="float:right">
-							<a href="<?php echo WB_URL; ?>/modules/forum/post_edit.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;postid=<?php echo $post['postid']; ?>"><img src="images/edit.png" width="16" height="16" border="0" title="<?php echo $MOD_FORUM['TXT_EDIT_F']; ?>" alt="" /></a>
-							<a id="delete" href="<?php echo WB_URL; ?>/modules/forum/post_delete.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;postid=<?php echo $post['postid']; ?>" onclick="return confirm(unescape('<?php echo $MOD_FORUM['TXT_REALLY_DELETE_F']; ?>'));"><img src="images/delete.png" width="16" height="16" border="0" title="<?php echo $MOD_FORUM['TXT_DELETE_F']; ?>" alt="" /></a>
+							<a href="<?php echo LEPTON_URL; ?>/modules/forum/post_edit.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;postid=<?php echo $post['postid']; ?>"><img src="images/edit.png" width="16" height="16" border="0" title="<?php echo $MOD_FORUM['TXT_EDIT_F']; ?>" alt="" /></a>
+							<a id="delete" href="<?php echo LEPTON_URL; ?>/modules/forum/post_delete.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;postid=<?php echo $post['postid']; ?>" onclick="return confirm(unescape('<?php echo $MOD_FORUM['TXT_REALLY_DELETE_F']; ?>'));"><img src="images/delete.png" width="16" height="16" border="0" title="<?php echo $MOD_FORUM['TXT_DELETE_F']; ?>" alt="" /></a>
 						</span> 
 				<?php
 				}
@@ -536,7 +536,7 @@ if( true === $user_can_create_answer ) {
 		<?php if(FORUM_HIDE_EDITOR) echo '<input type="button" id="toggleEditor" style="float: right; width: 150px; padding: 2px 0;" value="'.$MOD_FORUM['TXT_CREATE_ANSWER_F'].'" onclick="toggleEditor(this);" />';?>
 				<fieldset id="editor" style="margin-top: 10px; clear:right; <?php echo (FORUM_HIDE_EDITOR) ? "display:none;" : ""?>">
 					<legend><?php echo $MOD_FORUM['TXT_CREATE_ANSWER_F']; ?></legend>
-				<form action="<?php echo WB_URL; ?>/modules/forum/thread_reply.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>" method="post">
+				<form action="<?php echo LEPTON_URL; ?>/modules/forum/thread_reply.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>" method="post">
 				<input type="hidden" name="forum_ts" value="<?php $t=time(); echo $t; $_SESSION['forum_ts']=$t; ?>" />
 				<table cellpadding="2" cellspacing="0" align="center" border="0" style="width: 100%;">
 				<colgroup>
@@ -561,7 +561,7 @@ if( true === $user_can_create_answer ) {
 				?>
 				<tr>
 					<td><?php echo $MOD_FORUM['TXT_VERIFICATION_F']; ?></td>
-					<td><?php require_once(WB_PATH.'/include/captcha/captcha.php'); call_captcha(); ?></td>
+					<td><?php require_once(LEPTON_PATH.'/include/captcha/captcha.php'); call_captcha(); ?></td>
 				</tr>
 				<?php
 				}
@@ -574,7 +574,7 @@ if( true === $user_can_create_answer ) {
 			<tr <?php echo FORUM_USE_SMILEYS ? '' : 'style="display:none"'?> >
 				<td valign="top"><?php echo $MOD_FORUM['TXT_SMILIES_F']; ?></td>
 				<td>
-					<?php include(WB_PATH . '/modules/forum/smilies.php'); ?>
+					<?php include(LEPTON_PATH . '/modules/forum/smilies.php'); ?>
 				</td>
 			</tr>
 			<tr>
@@ -813,7 +813,7 @@ else if (FORUM_DISPLAY_CONTENT == 'post_edit') {
 	{
 		//	2016-05-10:	Bugfix
 		//				For some resons $homelink is missing here
-		$home_link = WB_URL.PAGES_DIRECTORY.$wb->page['link'].PAGE_EXTENSION;
+		$home_link = LEPTON_URL.PAGES_DIRECTORY.$wb->page['link'].PAGE_EXTENSION;
 	?>
 			<script type="text/javascript">
 			<!--
@@ -827,13 +827,13 @@ else if (FORUM_DISPLAY_CONTENT == 'post_edit') {
 
 			<div class="edit_head">
 			<div class="edit_head_home"><a href="<?php echo $home_link.'">'.PAGE_TITLE; ?></a></div>
-			<div class="edit_head_forum"><a href="<?php echo WB_URL; ?>/modules/forum/forum_view.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;fid=<?php echo $forum['forumid']; ?>"><?php echo $forum['title'] ?></a></div>
+			<div class="edit_head_forum"><a href="<?php echo LEPTON_URL; ?>/modules/forum/forum_view.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>&amp;fid=<?php echo $forum['forumid']; ?>"><?php echo $forum['title'] ?></a></div>
 
 			<div class="edit_head_topic"><?php echo $thread['title']; ?></div>
 			<div class="edit_head_edit"><?php echo $MOD_FORUM['TXT_EDIT_ARTICLE_F']; ?></div>
 		</div>
 
-			<form class="forum_form" id="addform" name="addform" action="<?php echo WB_URL; ?>/modules/forum/post_edit.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>" method="post">
+			<form class="forum_form" id="addform" name="addform" action="<?php echo LEPTON_URL; ?>/modules/forum/post_edit.php?sid=<?php echo $section_id; ?>&amp;pid=<?php echo $page_id; ?>" method="post">
 			<input type="hidden" name="forum_ts" value="<?php $t=time(); echo $t; $_SESSION['forum_ts']=$t; ?>" />
 			<table cellpadding="2" cellspacing="0" align="center" border="0" style="width: 100%;">
 			<colgroup>
@@ -862,7 +862,7 @@ else if (FORUM_DISPLAY_CONTENT == 'post_edit') {
 			<tr <?php echo FORUM_USE_SMILEYS ? '' : 'style="display:none"'?> >
 				<td valign="top"><?php echo $MOD_FORUM['TXT_SMILIES_F']; ?></td>
 				<td>
-					<?php include(WB_PATH . '/modules/forum/smilies.php'); ?>
+					<?php include(LEPTON_PATH . '/modules/forum/smilies.php'); ?>
 				</td>
 			</tr>
 			<tr>

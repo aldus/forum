@@ -76,7 +76,7 @@ function print_forums($parentid, $level = 0)
 		{
 
 			echo '<li class="mod_forum_forum_level'.$arrLevel[$forumid].'">';
-			echo '<a href="' . WB_URL . '/modules/forum/addedit_forum.php?page_id=' . $page_id . '&amp;section_id=' . $section_id . '&amp;forumid=' . $forumid . '">' . htmlspecialchars($forum['title']) . '</a>';
+			echo '<a href="' . LEPTON_URL . '/modules/forum/addedit_forum.php?page_id=' . $page_id . '&amp;section_id=' . $section_id . '&amp;forumid=' . $forumid . '">' . htmlspecialchars($forum['title']) . '</a>';
 			if (!empty($forum_array["$forumid"]))
 			{
 				echo '<ul class="forum_list">';
@@ -179,7 +179,7 @@ function construct_forum_depth_prefix($level)
 
 function parse_text($text)
 {
-	$smilepath = WB_URL . '/modules/forum/images/smile/';
+	$smilepath = LEPTON_URL . '/modules/forum/images/smile/';
 	$smile_characters = array(
 		'(B)',
 		'(b)',

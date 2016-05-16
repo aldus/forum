@@ -42,11 +42,11 @@ if (isset($_GET['search']) AND $_GET['search']==1 )
 else 
 {
 	$title =& $wb->page['page_title'];
-	$path = WB_PATH;
-	$url = WB_URL;
+	$path = LEPTON_PATH;
+	$url = LEPTON_URL;
 	$pageurl = $url . PAGES_DIRECTORY . $wb->page['link'] . PAGE_EXTENSION;
 
-	require_once(WB_PATH . '/modules/forum/backend.php');
+	require_once(LEPTON_PATH . '/modules/forum/backend.php');
 
 	if(!isset($forumcache)) {
 		/**

@@ -31,7 +31,7 @@ if (defined('LEPTON_PATH')) {
 
 require_once(LEPTON_PATH . '/modules/forum/config.php');
 
-require_once(WB_PATH . '/modules/forum/functions.php');
+require_once(LEPTON_PATH . '/modules/forum/functions.php');
 
 $user_id = (isset($_SESSION['USER_ID']) 
 	? $_SESSION['USER_ID'] 

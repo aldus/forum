@@ -37,7 +37,7 @@ $forum = $forum_query->fetchRow();
 
 if(!$forum)
 {
-	exit(header('Location: ' . WB_URL . PAGES_DIRECTORY));
+	exit(header('Location: ' . LEPTON_URL . PAGES_DIRECTORY));
 }
 else
 {
@@ -46,7 +46,7 @@ else
 	define('SECTION_ID', $section_id);
 }
 
-require_once(WB_PATH . '/modules/forum/backend.php');
+require_once(LEPTON_PATH . '/modules/forum/backend.php');
 
 $query_page = $database->query("
 	SELECT * FROM ".TABLE_PREFIX."pages AS p
@@ -56,16 +56,16 @@ $query_page = $database->query("
 
 if(!$query_page->numRows())
 {
-	exit(header('Location: ' . WB_URL . PAGES_DIRECTORY));
+	exit(header('Location: ' . LEPTON_URL . PAGES_DIRECTORY));
 }
 else
 {
 	$page = $query_page->fetchRow();
 
 	define('FORUM_DISPLAY_CONTENT', 'view_forum');
-	define('PAGE_CONTENT', WB_PATH . '/modules/forum/content.php');
+	define('PAGE_CONTENT', LEPTON_PATH . '/modules/forum/content.php');
 
-	require(WB_PATH . '/index.php');
+	require(LEPTON_PATH . '/index.php');
 }
 
 ?>

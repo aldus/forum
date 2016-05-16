@@ -60,7 +60,7 @@ if(method_exists($database, "escapeString")) {
 	$title = str_replace( array("<","#", "/*"), "", htmlspecialchars($title) ); 
 }
 
-require( WB_PATH.'/modules/admin.php' );
+require( LEPTON_PATH.'/modules/admin.php' );
 
 /**
  *        Load Language file

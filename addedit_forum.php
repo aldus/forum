@@ -50,7 +50,7 @@ if (isset($_REQUEST['forumid'])) {
 	$forum = $forum->fetchRow();
 }
 
-require_once(WB_PATH . '/modules/forum/backend.php');
+require_once(LEPTON_PATH . '/modules/forum/backend.php');
 
 if(!function_exists("forum_str2js")) {
 	function forum_str2js(&$s) {
@@ -75,14 +75,11 @@ if(!function_exists("forum_str2js")) {
 
 <h2><?php echo (isset($forum['forumid']) ? $MOD_FORUM['TXT_EDIT_FORUM_B'].' - '.$forum['title'] : $MOD_FORUM['TXT_CREATE_FORUM_B']); ?></h2>
 
-<form name="modify" action="<?php echo WB_URL; ?>/modules/forum/insertupdate_forum.php" method="post" style="margin: 0;">
+<form name="modify" action="<?php echo LEPTON_URL; ?>/modules/forum/insertupdate_forum.php" method="post" style="margin: 0;">
 
 <input type="hidden" name="section_id" value="<?php echo $section_id; ?>">
 <input type="hidden" name="page_id" value="<?php echo $page_id; ?>">
 <input type="hidden" name="forumid" value="<?php echo (isset($forum['forumid']) ? $forum['forumid'] : ''); ?>">
-
-<?php echo (true === method_exists($admin, "getFTAN")) ? $admin->getFTAN() : ""; ?>
-
 <table class="row_a" cellpadding="2" cellspacing="0" border="0" align="center" width="100%" style="margin-top: 5px;">
 	<tr>
 		<td colspan="2"><strong><?php echo $MOD_FORUM['TXT_SETTINGS_B']; ?></strong></td>
@@ -176,18 +173,23 @@ if(!function_exists("forum_str2js")) {
 </form>
 <?php
 	
-	if(!isset($forum)) return 0;
-	
+	if(!isset($forum)){
+		$admin->print_footer( true );
+		return true;
+	}
 	$query = "SELECT * FROM `".TABLE_PREFIX."mod_forum_thread` WHERE `section_id`=".$section_id." AND `page_id`=".$page_id." AND `forumid`=".$forum['forumid']." ORDER BY `threadid` DESC";
 	$result = $database->query( $query );
 	if( true === $database->is_error() ) die($database->get_error());
-	if(0 === $result->numRows()) return 0;
+	if(0 === $result->numRows()) {
+		$admin->print_footer( true );
+		return 0;
+	}
 	
-	$edit_link = WB_URL."/modules/forum/edit_post.php";
+	$edit_link = LEPTON_URL."/modules/forum/edit_post.php";
 ?>
 <p></p>
 <h3>List of postings</h3>
-<form id="forum_<?php echo $section_id; ?>" class="forum" action="<?php echo WB_URL; ?>/modules/forum/insertupdate_forum.php" method="post">
+<form id="forum_<?php echo $section_id; ?>" class="forum" action="<?php echo LEPTON_URL; ?>/modules/forum/insertupdate_forum.php" method="post">
 <input type="hidden" name="page_id" value="<?php echo $page_id; ?>" />
 <input type="hidden" name="section_id" value="<?php echo $section_id; ?>" />
 <input type="hidden" name="forumid" value="<?php echo $forum['forumid']; ?>" />
@@ -195,7 +197,6 @@ if(!function_exists("forum_str2js")) {
 <input type="hidden" name="class" value="-1" />
 <input type="hidden" name="ts_val" value="<?php echo time(); ?>" />
 <input type="hidden" name="job_" value="del" />
-<?php echo (true === method_exists($admin, "getFTAN")) ? $admin->getFTAN() : ""; ?>
 
 <ul class="forum_list_postings">
 
@@ -246,3 +247,6 @@ if(!function_exists("forum_str2js")) {
 ?>
 </ul>
 </form>
+<?php
+	$admin->print_footer();
+?>
