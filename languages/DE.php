@@ -120,6 +120,7 @@ $MOD_FORUM = array(
 	'Error_no_comment'	=> 'Bitte einen Kommentar zu diesem Forum angeben.',
 	'Error_no_parent'	=> 'Übergeordnetes Forum ungültig!',
 	'Error_no_subforum'	=> 'Ein Forum kann nicht sich selbst untergeordnet sein!',
-	'Error_no_forum'	=> 'Forum ungültig!'
+	'Error_no_forum'	=> 'Forum ungültig!',
+	'Tread/comment_saved'	=> 'Eintrag gespeichert.'
 );
 ?>

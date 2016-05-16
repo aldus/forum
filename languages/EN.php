@@ -117,6 +117,7 @@ $MOD_FORUM = array(
 	'Error_no_comment'	=> 'Please insert a comment for this forum.',
 	'Error_no_parent'	=> 'Parent forum fouls!',
 	'Error_no_subforum'	=> 'You can not set a forum himself as a subforum!',
-	'Error_no_forum'	=> 'Forum fouls!'
+	'Error_no_forum'	=> 'Forum fouls!',
+	'Tread/comment_saved'	=> 'Changes saved.'
 );
 ?>

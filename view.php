@@ -46,9 +46,18 @@ else
 	$url = WB_URL;
 	$pageurl = $url . PAGES_DIRECTORY . $wb->page['link'] . PAGE_EXTENSION;
 
-	require(WB_PATH . '/modules/forum/backend.php');
+	require_once(WB_PATH . '/modules/forum/backend.php');
 
-	if(is_array($forumcache)){
+	if(!isset($forumcache)) {
+		/**
+		 *	This could happen if ther is no forum to display!
+		 *	E.g. first run of the page after fresh install of this module.
+		 *  
+		 */
+		$forumcache= array();
+		$iforumcache = array();
+		
+	} elseif(is_array($forumcache)){
 		$forum_counts_query = $database->query("
 			SELECT forumid, COUNT(threadid) AS threadcount
 			FROM " . TABLE_PREFIX . "mod_forum_thread
