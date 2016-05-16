@@ -34,19 +34,22 @@ require(LEPTON_PATH.'/modules/admin.php');					// Include WB admin wrapper scrip
 // include core functions of WB 2.7 to edit the optional module CSS files (frontend.css, backend.css)
 @include_once(LEPTON_PATH .'/framework/summary.module_edit_css.php');
 
-// check if module language file exists for the language set by the user (e.g. DE, EN)
-if(!file_exists(LEPTON_PATH .'/modules/forum/languages/'.LANGUAGE .'.php')) {
-	// no module language file exists for the language set by the user, include default module language file EN.php
-	require_once(LEPTON_PATH .'/modules/forum/languages/EN.php');
-} else {
-	// a module language file exists for the language defined by the user, load it
-	require_once(LEPTON_PATH .'/modules/forum/languages/'.LANGUAGE .'.php');
-}
+/**
+ *        Load Language file
+ */
+$lang = (dirname(__FILE__))."/languages/". LANGUAGE .".php";
+require_once ( !file_exists($lang) ? (dirname(__FILE__))."/languages/EN.php" : $lang );
+
+/**	*******************************
+ *	Try to get the template-engine.
+ */
+global $parser, $loader,$twig_modul_namespace;
+require( dirname(__FILE__)."/register_parser.php" );
 
 // check if backend.css file needs to be included into the <body></body> of modify.php
-if(!method_exists($admin, 'register_backend_modfiles') && file_exists(LEPTON_PATH ."/modules/forum/backend.css")) {
+if(!method_exists($admin, 'register_backend_modfiles') && file_exists(WB_PATH ."/modules/forum/backend.css")) {
 	echo '<style type="text/css">';
-	include(LEPTON_PATH .'/modules/forum/backend.css');
+	include(WB_PATH .'/modules/forum/backend.css');
 	echo "\n</style>\n";
 }
 
@@ -63,128 +66,79 @@ if(function_exists('edit_module_css')) {
 ?>
 
 <?php
+
 // Get Settings from DB
-$sql  = 'SELECT * FROM '.TABLE_PREFIX.'mod_forum_settings WHERE `section_id` = '.$section_id.'';
+$sql  = 'SELECT * FROM `'.TABLE_PREFIX.'mod_forum_settings` WHERE `section_id` = '.$section_id.'';
 if($query_settings = $database->query($sql)) {
-	$settings = $query_settings->fetchRow(MYSQL_ASSOC);
-}?>
-</br></br>
-<form name="edit" action="<?php echo LEPTON_URL; ?>/modules/forum/save_settings.php" method="post" style="margin: 0;"/>
+	$settings = $query_settings->fetchRow();
+}
 
-<input type="hidden" name="page_id" value="<?php echo $page_id; ?>" />
-<input type="hidden" name="section_id" value="<?php echo $section_id; ?>" />
+/**
+ *	Build group select
+ */
+$this_page_admins = $database->get_one("SELECT `admin_groups` FROM `".TABLE_PREFIX."pages` WHERE `page_id`=".$page_id);
+$this_page_admins = explode(",",$this_page_admins);
+ 
+$sGroupSelectHTML = "<select name='admin_group_id' size='1' >\n<option value='0'>".$MOD_FORUM['NO_ADDITIONAL_GROUP']."</option>\n";
+$query_groups = $database->query('SELECT * FROM `'.TABLE_PREFIX.'groups`');
+while ($group = $query_groups->fetchRow(MYSQL_ASSOC)){
 
-<table summary="" class="row_a" cellpadding="2" cellspacing="0" border="0" width="90%">
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_FORUMDISPLAY_PERPAGE_B']; ?>:</td>
-		<td class="forum_setting_value">
-		  <input type="text" name="forumdisplay_perpage" style="width:20px;" maxlength="2" value="<?php echo $settings['FORUMDISPLAY_PERPAGE'];?>" />
-		</td>
-	</tr>
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_SHOWTHREAD_PERPAGE_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="text" name="showthread_perpage" style="width:20px;" maxlength="2" value="<?php echo $settings['SHOWTHREAD_PERPAGE'];?>" />
-		</td>
-	</tr>
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_PAGENAV_SIZES_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="checkbox" name="pagenav_sizes" <?php echo $settings['PAGENAV_SIZES'] ? 'checked="checked"' : '';?> />
-		</td>
-	</tr>
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_DISPLAY_SUBFORUMS_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="checkbox" name="display_subforums" <?php echo $settings['DISPLAY_SUBFORUMS'] ? 'checked="checked"' : '';?> />
-		</td>
-	</tr>
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_DISPLAY_SUBFORUMS_FORUMDISPLAY_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="checkbox" name="display_subforums_forumdisplay" <?php echo $settings['DISPLAY_SUBFORUMS_FORUMDISPLAY'] ? 'checked="checked"' : '';?> />
-		</td>
-	</tr>
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_FORUM_USE_CAPTCHA_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="checkbox" name="forum_use_captcha" <?php echo $settings['FORUM_USE_CAPTCHA'] ? 'checked="checked"' : '';?> />
-		</td>
-	</tr>	
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_USE_SMILEYS_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="checkbox" name="forum_use_smileys" <?php echo $settings['FORUM_USE_SMILEYS'] ? 'checked="checked"' : '';?> />
-		</td>
-	</tr>	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_HIDE_EDITOR_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="checkbox" name="forum_hide_editor" <?php echo $settings['FORUM_HIDE_EDITOR'] ? 'checked="checked"' : '';?> />
-		</td>
-	</tr>	
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_ADMIN_GROUP_ID_B']; ?>:</td>
-		<td class="forum_setting_value">
-		  <select name="admin_group_id" size="1" >
-				<?php $sql  = 'SELECT * FROM '.TABLE_PREFIX.'groups';
-							$query_groups = $database->query($sql);
-							while ($group = $query_groups->fetchRow(MYSQL_ASSOC)){
-								if ($group['group_id'] == $settings['ADMIN_GROUP_ID'])
-								  echo '<option selected value="'.$group['group_id'].'">'.$group['name'].'</option>';
-								else
-									echo '<option value="'.$group['group_id'].'">'.$group['name'].'</option>';
-							}							
-				?>
-	    </select>		
-		</td>
-	</tr>
+	if (in_array( $group['group_id'], $this_page_admins)) {
+		$sGroupSelectHTML .= "\n<option disabled='disabled' value='".$group['group_id']."'>".$group['name']."</option>";
 
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_VIEW_FORUM_SEARCH_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="checkbox" name="view_forum_search"  <?php echo $settings['VIEW_FORUM_SEARCH'] ? 'checked="checked"' : '';?> />
-		</td>
-	</tr>
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_FORUM_MAX_SEARCH_HITS_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="text" name="forum_max_search_hits" style="width:20px;" maxlength="2" value="<?php echo $settings['FORUM_MAX_SEARCH_HITS'];?>" />
-		</td>
-	</tr>
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_FORUM_SENDMAILS_ON_NEW_POSTS_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="checkbox" name="forum_sendmails_on_new_posts"  <?php echo $settings['FORUM_SENDMAILS_ON_NEW_POSTS'] ? 'checked="checked"' : '';?> />
-		</td>
-	</tr>
-		<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_FORUM_ADMIN_INFO_ON_NEW_POSTS_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="text" name="forum_admin_info_on_new_posts"  maxlength="30" value="<?php echo htmlspecialchars($settings['FORUM_ADMIN_INFO_ON_NEW_POSTS']);?>" />
-		</td>
-	</tr>
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_FORUM_MAIL_SENDER_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="text" name="forum_mail_sender"  maxlength="30" value="<?php echo htmlspecialchars($settings['FORUM_MAIL_SENDER']);?>" />
-		</td>
-	</tr>
-	<tr>
-		<td class="forum_setting_name"><?php echo $MOD_FORUM['TXT_FORUM_MAIL_SENDER_REALNAME_B']; ?>:</td>
-		<td class="forum_setting_value">
-			<input type="text" name="forum_mail_sender_realname"  maxlength="30" value="<?php echo htmlspecialchars($settings['FORUM_MAIL_SENDER_REALNAME']);?>" />
-		</td>
-	</tr>
-</table>
-<br /><br />
-<table summary="" cellpadding="0" cellspacing="0" border="0" width="100%">
-	<tr>
-		<td align="left">
-			<input name="save" type="submit" value="<?php echo $MOD_FORUM['TXT_SAVE_B']; ?>" style="width: 100px; margin-top: 5px;">
-		</td>
-		<td align="right">
-			<input type="button" value="<?php echo $MOD_FORUM['TXT_CANCEL_B']; ?>" onclick="javascript: window.location = '<?php echo ADMIN_URL; ?>/pages/modify.php?page_id=<?php echo $page_id; ?>';" style="width: 100px; margin-top: 5px;" />
-		</td>
-	</tr>
-</table>
-</form>
+	} elseif ($group['group_id'] == $settings['ADMIN_GROUP_ID']) {
+		$sGroupSelectHTML .= "\n<option selected='selected' value='".$group['group_id']."'>".$group['name']."</option>";
+
+	} else {
+		$sGroupSelectHTML .= "\n<option value='".$group['group_id']."'>".$group['name']."</option>";
+	}							
+}
+$sGroupSelectHTML .= "\n</select>\n";
+
+$sHTMLchecked = "checked='checked'";
+
+$page_data = array(
+	'WB_PATH'	=> WB_PATH,
+	'WB_URL'	=> WB_URL,
+	'ADMIN_URL'	=> ADMIN_URL,
+	'page_id'	=> $page_id,
+	'section_id'	=> $section_id,
+	'MOD_FORUM_TXT_FORUMDISPLAY_PERPAGE_B' => $MOD_FORUM['TXT_FORUMDISPLAY_PERPAGE_B'],
+	'settings_FORUMDISPLAY_PERPAGE'	=> $settings['FORUMDISPLAY_PERPAGE'],
+	'MOD_FORUM_TXT_SHOWTHREAD_PERPAGE_B'	=> $MOD_FORUM['TXT_SHOWTHREAD_PERPAGE_B'],
+	'settings_SHOWTHREAD_PERPAGE'	=> $settings['SHOWTHREAD_PERPAGE'],
+	'MOD_FORUM_TXT_PAGENAV_SIZES_B'	=> $MOD_FORUM['TXT_PAGENAV_SIZES_B'],
+	'settings_PAGENAV_SIZES_checked'	=> $settings['PAGENAV_SIZES'] == 1 ? $sHTMLchecked : "",
+	'MOD_FORUM_TXT_DISPLAY_SUBFORUMS_B'	=> $MOD_FORUM['TXT_DISPLAY_SUBFORUMS_B'],
+	'settings_DISPLAY_SUBFORUMS_checked'	=> $settings['DISPLAY_SUBFORUMS'] == 1 ? $sHTMLchecked : "",
+	'MOD_FORUM_TXT_DISPLAY_SUBFORUMS_FORUMDISPLAY_B'	=> $MOD_FORUM['TXT_DISPLAY_SUBFORUMS_FORUMDISPLAY_B'],
+	'settings_DISPLAY_SUBFORUMS_FORUMDISPLAY_checked'	=> $settings['DISPLAY_SUBFORUMS_FORUMDISPLAY'] == 1 ? $sHTMLchecked : "",
+	'MOD_FORUM_TXT_FORUM_USE_CAPTCHA_B'	=> $MOD_FORUM['TXT_FORUM_USE_CAPTCHA_B'],
+	'settings_FORUM_USE_CAPTCHA_checked'	=> $settings['FORUM_USE_CAPTCHA'] == 1 ? $sHTMLchecked : "",
+	'MOD_FORUM_TXT_USE_SMILEYS_B'	=> $MOD_FORUM['TXT_USE_SMILEYS_B'],
+	'settings_FORUM_USE_SMILEYS_checked'	=> $settings['FORUM_USE_SMILEYS'] == 1 ? $sHTMLchecked : "",
+	'MOD_FORUM_TXT_HIDE_EDITOR_B' => $MOD_FORUM['TXT_HIDE_EDITOR_B'],
+	'settings_FORUM_HIDE_EDITOR_checked'	=> $settings['FORUM_HIDE_EDITOR'] == 1 ? $sHTMLchecked : "",
+	'MOD_FORUM_TXT_VIEW_FORUM_SEARCH_B'	=> $MOD_FORUM['TXT_VIEW_FORUM_SEARCH_B'],
+	'settings_VIEW_FORUM_SEARCH_checked'	=> $settings['VIEW_FORUM_SEARCH'] == 1 ? $sHTMLchecked : "",
+	'MOD_FORUM_TXT_FORUM_MAX_SEARCH_HITS_B'	=> $MOD_FORUM['TXT_FORUM_MAX_SEARCH_HITS_B'],
+	'settings_FORUM_MAX_SEARCH_HITS'	=> $settings['FORUM_MAX_SEARCH_HITS'],
+	'MOD_FORUM_TXT_FORUM_SENDMAILS_ON_NEW_POSTS_B'	=> $MOD_FORUM['TXT_FORUM_SENDMAILS_ON_NEW_POSTS_B'],
+	'settings_FORUM_SENDMAILS_ON_NEW_POSTS_checked' => $settings['FORUM_SENDMAILS_ON_NEW_POSTS'] == 1 ? $sHTMLchecked : "",
+	'MOD_FORUM_TXT_FORUM_ADMIN_INFO_ON_NEW_POSTS_B'	=> $MOD_FORUM['TXT_FORUM_ADMIN_INFO_ON_NEW_POSTS_B'],
+	'settings_FORUM_ADMIN_INFO_ON_NEW_POSTS'	=> htmlspecialchars($settings['FORUM_ADMIN_INFO_ON_NEW_POSTS']),
+	'MOD_FORUM_TXT_FORUM_MAIL_SENDER_B'	=> $MOD_FORUM['TXT_FORUM_MAIL_SENDER_B'],
+	'settings_FORUM_MAIL_SENDER'	=> htmlspecialchars($settings['FORUM_MAIL_SENDER']),
+	'MOD_FORUM_TXT_FORUM_MAIL_SENDER_REALNAME_B'	=> $MOD_FORUM['TXT_FORUM_MAIL_SENDER_REALNAME_B'],
+	'settings_FORUM_MAIL_SENDER_REALNAME'	=> htmlspecialchars($settings['FORUM_MAIL_SENDER_REALNAME']),
+	'MOD_FORUM_TXT_SAVE_B'	=> $MOD_FORUM['TXT_SAVE_B'],
+	'MOD_FORUM_TXT_CANCEL_B'	=> $MOD_FORUM['TXT_CANCEL_B'],
+	
+	'MOD_FORUM_TXT_ADMIN_GROUP_ID_B'	=> $MOD_FORUM['TXT_ADMIN_GROUP_ID_B'],
+	'group_select'	=> $sGroupSelectHTML
+);
+
+echo $parser->render(
+	$twig_modul_namespace."/settings.lte",
+	$page_data
+);	

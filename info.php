@@ -32,13 +32,12 @@ if (defined('LEPTON_PATH')) {
 $module_directory	= 'forum';
 $module_name		= 'Forum';
 $module_function	= 'page';
-$module_version		= '1.1.0';
-$module_platform	= '2.1';
+$module_version		= '1.2.0';
+$module_platform	= '2.1.0';
 $module_license		= 'GNU General Public License';
 $module_author		= 'Julian Schuh, Bernd Michna, "Herr Rilke", Dietrich Roland Pehlke (last)';
 $module_home		= 'http://www.lepton-cms.com/lepador/modules/forum.php';
 $module_guid		= '44CF11ED-D38A-4B51-AF80-EE95F7C4C00D';
 $module_description	= 'Dieses Modul integriert ein einfaches Forum in ihre Webseite.<br/>';
-
 
 ?>
