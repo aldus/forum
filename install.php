@@ -30,7 +30,7 @@ if (defined('LEPTON_PATH')) {
 // end include class.secure.php
 
 $database->query("
-CREATE TABLE IF NOT EXISTS " . TABLE_PREFIX . "mod_forum_forum (
+CREATE TABLE IF NOT EXISTS `" . TABLE_PREFIX . "mod_forum_forum` (
   forumid int(10) unsigned NOT NULL auto_increment,
   section_id int(10) NOT NULL,
   page_id int(10) NOT NULL,
@@ -42,21 +42,21 @@ CREATE TABLE IF NOT EXISTS " . TABLE_PREFIX . "mod_forum_forum (
   readaccess enum('reg','unreg','both') NOT NULL default 'both',
   writeaccess enum('reg','unreg','both') NOT NULL default 'both',
   PRIMARY KEY  (forumid)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+);
 ");
 
 $database->query("
-CREATE TABLE IF NOT EXISTS " . TABLE_PREFIX . "mod_forum_cache (
+CREATE TABLE IF NOT EXISTS `" . TABLE_PREFIX . "mod_forum_cache` (
   varname varchar(255) NOT NULL,
   section_id int(10) unsigned NOT NULL default '0',
   page_id int(10) unsigned NOT NULL default '0',
   `data` mediumtext NOT NULL,
   UNIQUE KEY `UNIQUE` (varname,section_id,page_id)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ;
 ");
 
 $database->query("
-CREATE TABLE IF NOT EXISTS " . TABLE_PREFIX . "mod_forum_post (
+CREATE TABLE IF NOT EXISTS `" . TABLE_PREFIX . "mod_forum_post` (
   postid int(10) unsigned NOT NULL auto_increment,
   threadid int(10) unsigned NOT NULL default '0',
   username varchar(250) NOT NULL,
@@ -70,11 +70,11 @@ CREATE TABLE IF NOT EXISTS " . TABLE_PREFIX . "mod_forum_post (
   PRIMARY KEY (postid),
   KEY threadid (threadid),
   FULLTEXT KEY Volltext (title,search_text)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+);
 ");
 
 $database->query("
-CREATE TABLE IF NOT EXISTS " . TABLE_PREFIX . "mod_forum_thread (
+CREATE TABLE IF NOT EXISTS `" . TABLE_PREFIX . "mod_forum_thread` (
   threadid int(10) unsigned NOT NULL auto_increment,
   user_id int(10) unsigned NOT NULL default '0',
   username varchar(250) NOT NULL,
@@ -92,11 +92,11 @@ CREATE TABLE IF NOT EXISTS " . TABLE_PREFIX . "mod_forum_thread (
   PRIMARY KEY  (threadid),
   KEY titel (title),
   KEY forumid (forumid)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ;
 ");
 
 $database->query("
-CREATE TABLE IF NOT EXISTS " . TABLE_PREFIX . "mod_forum_settings (
+CREATE TABLE IF NOT EXISTS `" . TABLE_PREFIX . "mod_forum_settings` (
   `id` tinyint(4) NOT NULL AUTO_INCREMENT,
   `section_id` smallint(6) NOT NULL,
   `FORUMDISPLAY_PERPAGE` tinyint(4) NOT NULL,
@@ -116,8 +116,6 @@ CREATE TABLE IF NOT EXISTS " . TABLE_PREFIX . "mod_forum_settings (
   `FORUM_HIDE_EDITOR` tinyint(4) NOT NULL,
   `FORUM_USERS` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
+) ;
 ");
-
-
 ?>

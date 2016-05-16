@@ -70,16 +70,16 @@ function print_forums($parentid, $level = 0)
 {
 	global $forum_array, $section_id, $page_id, $arrLevel;
 
-	if (!empty($forum_array["$parentid"]))
+	if (!empty($forum_array[$parentid]))
 	{
-		foreach ($forum_array["$parentid"] AS $forumid => $forum)
+		foreach ($forum_array[$parentid ] AS $forumid => $forum)
 		{
 
 			echo '<li class="mod_forum_forum_level'.$arrLevel[$forumid].'">';
-			echo '<a href="' . LEPTON_URL . '/modules/forum/addedit_forum.php?page_id=' . $page_id . '&amp;section_id=' . $section_id . '&amp;forumid=' . $forumid . '">' . htmlspecialchars($forum['title']) . '</a>';
+			echo '<a href="' . WB_URL . '/modules/forum/addedit_forum.php?page_id=' . $page_id . '&amp;section_id=' . $section_id . '&amp;forumid=' . $forumid . '">' . htmlspecialchars($forum['title']) . '</a>';
 			if (!empty($forum_array["$forumid"]))
 			{
-				echo '<ul>';
+				echo '<ul class="forum_list">';
 					print_forums($forumid, $level);
 				echo '</ul>';
 			}
@@ -95,8 +95,7 @@ function getForumLevel($parentid = 0, $level = 1)
 	static $out;
 
 	$forumcache = array();
-	$sql = "SELECT * FROM " . TABLE_PREFIX . "mod_forum_cache WHERE section_id = '$section_id' AND page_id = '$page_id'";
-	$res = $database->query($sql);
+	$res = $database->query("SELECT * FROM `" . TABLE_PREFIX . "mod_forum_cache` WHERE `section_id` = '".$section_id."' AND `page_id` = '".$page_id."'");
 
 	while ($cache_entry = $res->fetchRow( MYSQL_ASSOC )) {
 		${$cache_entry['varname']} = unserialize($cache_entry['data']);
@@ -104,29 +103,26 @@ function getForumLevel($parentid = 0, $level = 1)
 
 	$iforumcache = array();
 	foreach ($forumcache AS $forumid => $f) {
-		$iforumcache[$f['parentid']]["$forumid"] = $forumid;
+		$iforumcache[$f['parentid']][ $forumid ] = $forumid;
 	}
 
-
-	if (!empty($iforumcache["$parentid"]))
+	if (!empty($iforumcache[ $parentid ]))
 	{
 
-		foreach ($iforumcache["$parentid"] AS $forumid)
+		foreach ($iforumcache[ $parentid ] AS $forumid)
 		{
 			$out[$forumid] = $level;
 
-			if (!empty($iforumcache["$forumid"]))
+			if (!empty($iforumcache[ $forumid ]))
 			{
 				getForumLevel($forumid, ($level + 1));
 			}
 		}
-
-	}//if
+	}
 
    return $out;
 
-}//getForumLevel
-
+}
 
 function print_forum_select_options($selectedforum, $parentid = 0, $level = 1)
 {
@@ -183,7 +179,7 @@ function construct_forum_depth_prefix($level)
 
 function parse_text($text)
 {
-	$smilepath = LEPTON_URL . '/modules/forum/images/smile/';
+	$smilepath = WB_URL . '/modules/forum/images/smile/';
 	$smile_characters = array(
 		'(B)',
 		'(b)',
@@ -245,27 +241,27 @@ function parse_text($text)
 }
 
 function parse_bbcode($text, $quote) {
-// BBCode to find...
+	// BBCode to find...
 	$in = array(
-					 '/\[b\](.*?)\[\/b\]/ms',
-					 '/\[i\](.*?)\[\/i\]/ms',
-					 '/\[u\](.*?)\[\/u\]/ms',
-					 '/\[s\](.*?)\[\/s\]/ms',
-					 '/\[url\="?(.*?)"?\](.*?)\[\/url\]/ms',
-					 '/\[size\="?(.*?)"?\](.*?)\[\/size\]/ms',
-					 '/\[color\="?(.*?)"?\](.*?)\[\/color\]/ms',
-					 '/\[quote](.*?)\[\/quote\]/ms'
+		'/\[b\](.*?)\[\/b\]/ms',
+		'/\[i\](.*?)\[\/i\]/ms',
+		'/\[u\](.*?)\[\/u\]/ms',
+		'/\[s\](.*?)\[\/s\]/ms',
+		'/\[url\="?(.*?)"?\](.*?)\[\/url\]/ms',
+		'/\[size\="?(.*?)"?\](.*?)\[\/size\]/ms',
+		'/\[color\="?(.*?)"?\](.*?)\[\/color\]/ms',
+		'/\[quote](.*?)\[\/quote\]/ms'
 	);
 	// And replace them by...
 	$out = array(
-					 '<strong>\1</strong>',
-					 '<em>\1</em>',
-					 '<u>\1</u>',
-					 '<strike>\1</strike>',
-					 '<a href="\1">\2</a>',
-					 '<span style="font-size: \1%;">\2</span>',
-					 '<span style="color: \1;">\2</span>',
-					 '<fieldset style="background-color: #EEE; padding: 0 4px 2px; font-style: italic;"><legend>'.$quote.'</legend>\1</fieldset>'
+		'<strong>\1</strong>',
+		'<em>\1</em>',
+		'<u>\1</u>',
+		'<strike>\1</strike>',
+		'<a href="\1">\2</a>',
+		'<span style="font-size: \1%;">\2</span>',
+		'<span style="color: \1;">\2</span>',
+		'<fieldset style="background-color: #EEE; padding: 0 4px 2px; font-style: italic;"><legend>'.$quote.'</legend>\1</fieldset>'
 	);
 
 	return nl2br(preg_replace($in, $out, $text));
@@ -274,7 +270,7 @@ function parse_bbcode($text, $quote) {
 /**
  * strip_bb
  * otherworld.de
- * f¸r die Vorschau brauchen wir TAG freie zeichen, denn wir wollen den text
+ * für die Vorschau brauchen wir TAG freie zeichen, denn wir wollen den text
  * nicht komplett anzeigen. daher laufen wir gefahr, tags nicht zu schlieﬂen, so
  * dass es uns unser gesamt-layout um die ohren haut.
  */
@@ -282,29 +278,28 @@ function parse_bbcode($text, $quote) {
 function strip_bbcode($text) {
 	// BBCode to find...
 	$in = array(
-						 '/\[b\](.*?)\[\/b\]/ms',
-						 '/\[i\](.*?)\[\/i\]/ms',
-						 '/\[u\](.*?)\[\/u\]/ms',
-						 '/\[s\](.*?)\[\/s\]/ms',
-						 '/\[url\="?(.*?)"?\](.*?)\[\/url\]/ms',
-						 '/\[size\="?(.*?)"?\](.*?)\[\/size\]/ms',
-						 '/\[color\="?(.*?)"?\](.*?)\[\/color\]/ms',
-						 '/\[quote](.*?)\[\/quote\]/ms'
-		);
+		'/\[b\](.*?)\[\/b\]/ms',
+		'/\[i\](.*?)\[\/i\]/ms',
+		'/\[u\](.*?)\[\/u\]/ms',
+		'/\[s\](.*?)\[\/s\]/ms',
+		'/\[url\="?(.*?)"?\](.*?)\[\/url\]/ms',
+		'/\[size\="?(.*?)"?\](.*?)\[\/size\]/ms',
+		'/\[color\="?(.*?)"?\](.*?)\[\/color\]/ms',
+		'/\[quote](.*?)\[\/quote\]/ms'
+	);
 	// And replace them by...
 	$out = array(
-						 '\1',
-						 '\1',
-						 '\1',
-						 '',
-						 '\2',
-						 '\2',
-						 '\2',
-						 ''
-		);
+		'\1',
+		'\1',
+		'\1',
+		'',
+		'\2',
+		'\2',
+		'\2',
+		''
+	);
 
 	return preg_replace($in, $out, $text);
-	//return  substr_replace($in, $out,0) ;
 }
 
 /**

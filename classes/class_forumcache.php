@@ -1,4 +1,5 @@
 <?php
+
 /**
  *  @module         Forum
  *  @version        see info.php of this module
@@ -10,25 +11,6 @@
  *
  */
 
-// include class.secure.php to protect this file and the whole CMS!
-if (defined('LEPTON_PATH')) {   
-   include(LEPTON_PATH.'/framework/class.secure.php');
-} else {
-   $oneback = "../";
-   $root = $oneback;
-   $level = 1;
-   while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
-      $root .= $oneback;
-      $level += 1;
-   }
-   if (file_exists($root.'/framework/class.secure.php')) {
-      include($root.'/framework/class.secure.php');
-   } else {
-      trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
-   }
-}
-// end include class.secure.php
-
 class ForumCacheBuilder {
 	public $db;
 	public $section_id;
@@ -36,8 +18,19 @@ class ForumCacheBuilder {
 	public $icache;
 	public $cache;
 	
-	private	$version = "1.1.0 - May 2016";
+	/**
+	 *	Version of this class
+	 */
+	protected $version = "0.2.0 - beta";
 	
+	/**
+	 *	Constructor of this class
+	 *
+	 *	@param	object	A valid instance of (any) DB-Connector (pass-by-reference)
+	 *	@param	int		A section id if the currend forum
+	 *	@param	int		A referending page id
+	 *
+	 */
 	public function __construct(&$database, $section_id, $page_id) {
 		$this->db =& $database;
 		$this->section_id = $section_id;
@@ -46,7 +39,7 @@ class ForumCacheBuilder {
 	}
 
 	public function fetch_icache() {
-		$forums = $this->db->query("SELECT * FROM `".TABLE_PREFIX."mod_forum_forum` WHERE `section_id` = '" . $this->section_id . "' AND page_id = '" . $this->page_id . "' ORDER BY displayorder ASC");
+		$forums = $this->db->query("SELECT * FROM `" . TABLE_PREFIX . "mod_forum_forum` WHERE `section_id` = '" . $this->section_id . "' AND `page_id` = '" . $this->page_id . "' ORDER BY displayorder ASC");
 		while ($forum = $forums->fetchRow()) {
 			foreach ($forum AS $key => $val)	{
 				if (is_numeric($key) OR $key == 'lastpostinfo')	{
@@ -58,10 +51,10 @@ class ForumCacheBuilder {
 	}
 
 	public function build_cache($parentid, $readperms = 'both', $writeperms = 'both') {
-		if (empty($this->icache["$parentid"])) {
+		if (empty($this->icache[ $parentid ])) {
 			return;
 		}
-		foreach ($this->icache["$parentid"] AS $forumid => $forum) {
+		foreach ($this->icache[ $parentid ] AS $forumid => $forum) {
 			switch ($readperms) {
 				case 'reg':
 					if ($forum['readaccess'] == 'both') {
@@ -94,7 +87,7 @@ class ForumCacheBuilder {
 					}
 					break;
 			}
-			$this->cache["$forumid"] = $forum;
+			$this->cache[ $forumid ] = $forum;
 			$this->build_cache($forumid, $forum['readaccess'], $forum['writeaccess']);
 		}
 	}
@@ -102,9 +95,11 @@ class ForumCacheBuilder {
 	public function save() {
 		if (empty($this->cache)) {
 			$this->db->query("REPLACE INTO `".TABLE_PREFIX."mod_forum_cache` (`page_id`, `section_id`, `varname`, `data`) VALUES ('".$this->page_id."', '".$this->section_id."', 'forumcache', '')");
+			if( true === $this->db->is_error()) die( $this->db->get_error() );
 			return;
 		}
-		$this->db->query("REPLACE INTO `".TABLE_PREFIX."mod_forum_cache` (`page_id`, `section_id`, `varname`, `data`) VALUES ('".$this->page_id."', '".$this->section_id."', 'forumcache', '".$this->db->mysql_escape(serialize($this->cache))."')");
+		$this->db->query("REPLACE INTO `".TABLE_PREFIX."mod_forum_cache` (`page_id`, `section_id`, `varname`, `data`) VALUES ('".$this->page_id."', '".$this->section_id."', 'forumcache', '".$this->db->escapeString(serialize($this->cache))."')");
+		if( true === $this->db->is_error()) die( $this->db->get_error() );
 	}
 	
 	// build new cache after forum delete
