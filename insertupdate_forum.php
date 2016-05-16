@@ -196,6 +196,7 @@ function is_subforum_of($forumid, $parentid)
 if (isset($forum['forumid']))
 {
 	// Update existing Forum
+	/*
 	$database->query("
 		UPDATE `" . TABLE_PREFIX . "mod_forum_forum`
 			SET
@@ -208,7 +209,24 @@ if (isset($forum['forumid']))
 		WHERE
 			forumid = '".$forum['forumid']."'
 	");
-
+	*/
+	$fields = array(
+		'title'	=> $_POST['title'],
+		'description'	=> $_POST['description'],
+		'displayorder'	=> $_POST['displayorder'],
+		'parentid'	=> $_POST['parentid'],
+		'readaccess'	=> $_POST['readaccess'],
+		'writeaccess'	=> $_POST['writeaccess']
+	
+	);
+	
+	$database->build_and_execute(
+		'update',
+		TABLE_PREFIX."mod_forum_forum",
+		$fields,
+		"`forumid` = '".$forum['forumid']."'"
+	);
+	
 	if($database->is_error()) {
 		$admin->print_error(
 			"Error[5]: ".$database->get_error(),
