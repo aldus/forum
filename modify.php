@@ -38,8 +38,11 @@ require_once(WB_PATH . '/modules/forum/backend.php');
 $lang = (dirname(__FILE__))."/languages/". LANGUAGE .".php";
 require_once ( !file_exists($lang) ? (dirname(__FILE__))."/languages/EN.php" : $lang );
 
-require_once( dirname(__FILE__)."/classes/class.forum_parser.php" );
-$parser = new forum_parser();
+/**	*******************************
+ *	Try to get the template-engine.
+ */
+global $parser, $loader,$twig_modul_namespace;
+require( dirname(__FILE__)."/register_parser.php" );
 
 $forums = $database->query("SELECT * FROM `" . TABLE_PREFIX . "mod_forum_forum` WHERE `section_id` = '".$section_id."' AND `page_id` = '".$page_id."' ORDER BY `displayorder` ASC");
 
@@ -88,15 +91,15 @@ $page_data = array(
 	'WB_URL' => WB_URL,
 	'section_id'	=> $section_id,
 	'page_id'	=> $page_id,
-	'MOD_FORUM.TXT_CREATE_FORUM_B'	=> $MOD_FORUM['TXT_CREATE_FORUM_B'],
-	'MOD_FORUM.TXT_FORUMS_B'	=> $MOD_FORUM['TXT_FORUMS_B'],
-	'TEXT.SETTINGS'	=> $TEXT['SETTINGS'],
+	'MOD_FORUM_TXT_CREATE_FORUM_B'	=> $MOD_FORUM['TXT_CREATE_FORUM_B'],
+	'MOD_FORUM_TXT_FORUMS_B'	=> $MOD_FORUM['TXT_FORUMS_B'],
+	'TEXT_SETTINGS'	=> $TEXT['SETTINGS'],
 	'message'		=> $message,
 	'forums_list'	=> $forums_list
 );
 
 echo $parser->render(
-	dirname(__FILE__)."/templates/modify.tmpl",
+	$twig_modul_namespace."/modify.lte",
 	$page_data
 );
 
