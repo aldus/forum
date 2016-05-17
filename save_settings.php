@@ -36,7 +36,7 @@ $update_when_modified = true;
 require(LEPTON_PATH.'/modules/admin.php');
 
 
-$sec_anchor = (defined( 'SEC_ANCHOR' ) && ( SEC_ANCHOR != '' )  ? '#'.SEC_ANCHOR.$section['section_id'] : '' );
+$sec_anchor = (defined( 'SEC_ANCHOR' ) && ( SEC_ANCHOR != '' )  ? '#'.SEC_ANCHOR.$section_id : '' );
 
 
 // load module language file
@@ -55,9 +55,9 @@ $admin_group_id = ( isset($_POST['admin_group_id']) ? $_POST['admin_group_id'] :
 $view_forum_search = isset($_POST['view_forum_search']) ? 1 : 0;
 $forum_max_search_hits = is_numeric($_POST['forum_max_search_hits']) ? $_POST['forum_max_search_hits'] : 1;
 $forum_sendmails_on_new_posts = isset($_POST['forum_sendmails_on_new_posts']) ? 1 : 0;
-$forum_admin_info_on_new_posts = $admin->add_slashes($_POST['forum_admin_info_on_new_posts']);
-$forum_mail_sender = $admin->add_slashes($_POST['forum_mail_sender']);
-$forum_mail_sender_realname = $admin->add_slashes($_POST['forum_mail_sender_realname']);
+$forum_admin_info_on_new_posts = addslashes($_POST['forum_admin_info_on_new_posts']);
+$forum_mail_sender = addslashes($_POST['forum_mail_sender']);
+$forum_mail_sender_realname = addslashes($_POST['forum_mail_sender_realname']);
 
 // Update settings
 $sql  = 'UPDATE `'.TABLE_PREFIX.'mod_forum_settings` SET ';

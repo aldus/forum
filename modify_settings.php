@@ -142,3 +142,5 @@ echo $parser->render(
 	$twig_modul_namespace."/settings.lte",
 	$page_data
 );	
+
+$admin->print_footer();
