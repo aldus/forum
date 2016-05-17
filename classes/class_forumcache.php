@@ -94,7 +94,16 @@ class ForumCacheBuilder {
 
 	public function save() {
 		if (empty($this->cache)) {
+			/*
+			$fields = array(
+				'page_id'	=> $this->page_id,
+				'section_id'	=> $this->section_id,
+				'varname'	=> "forumcache",
+				'data'	=> ""
+			);
+			*/
 			$this->db->query("REPLACE INTO `".TABLE_PREFIX."mod_forum_cache` (`page_id`, `section_id`, `varname`, `data`) VALUES ('".$this->page_id."', '".$this->section_id."', 'forumcache', '')");
+			
 			if( true === $this->db->is_error()) die( $this->db->get_error() );
 			return;
 		}
