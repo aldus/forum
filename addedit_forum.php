@@ -72,6 +72,8 @@ if(!function_exists("forum_str2js")) {
 }
 
 $leptoken = (isset($_REQUEST['leptoken'])) ? $_REQUEST['leptoken'] : "0";
+
+getForumLevel();
 ?>
 
 <h2><?php echo (isset($forum['forumid']) ? $MOD_FORUM['TXT_EDIT_FORUM_B'].' - '.$forum['title'] : $MOD_FORUM['TXT_CREATE_FORUM_B']); ?></h2>
@@ -110,7 +112,7 @@ $leptoken = (isset($_REQUEST['leptoken'])) ? $_REQUEST['leptoken'] : "0";
 			<select name="parentid" style="width: 500px;">
 				<option value="0"> - </option>
 				<?php
-				print_forum_select_options(isset($forum) ? $forum['parentid'] : "");
+print_forum_select_options(isset($forum) ? $forum['parentid'] : "");
 				?>
 			</select>
 		</td>

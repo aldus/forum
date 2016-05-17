@@ -91,7 +91,7 @@ function print_forums($parentid, $level = 0)
 function getForumLevel($parentid = 0, $level = 1)
 {
 	global $database, $section_id, $page_id;
-global $iforumcache;
+	global $forumcache, $iforumcache;
 	static $out;
 
 	$forumcache = array();
