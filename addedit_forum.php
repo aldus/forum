@@ -71,6 +71,7 @@ if(!function_exists("forum_str2js")) {
 	}
 }
 
+$leptoken = (isset($_REQUEST['leptoken'])) ? $_REQUEST['leptoken'] : "0";
 ?>
 
 <h2><?php echo (isset($forum['forumid']) ? $MOD_FORUM['TXT_EDIT_FORUM_B'].' - '.$forum['title'] : $MOD_FORUM['TXT_CREATE_FORUM_B']); ?></h2>
@@ -197,7 +198,7 @@ if(!function_exists("forum_str2js")) {
 <input type="hidden" name="class" value="-1" />
 <input type="hidden" name="ts_val" value="<?php echo time(); ?>" />
 <input type="hidden" name="job_" value="del" />
-
+<input type="hidden" name="leptoken" value="<?php echo $leptoken; ?>" />
 <ul class="forum_list_postings">
 
 <?php

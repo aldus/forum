@@ -30,7 +30,7 @@ if (defined('LEPTON_PATH')) {
 }
 // end include class.secure.php
 
-require_once( LEPTON_PATH."/framework/class.validate.request" );
+require_once( LEPTON_PATH."/framework/class.validate.request.php" );
 $oValidate = new c_validate_request();
 
 $fields = array(

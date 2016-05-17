@@ -71,17 +71,19 @@ $values = array(
 	"forumid"		=> $forumid,
 	"postid"		=> $postid,
 	"LEPTON_URL"		=> LEPTON_URL,
-	"FTAN"			=> (true === method_exists($admin, "getFTAN")) ? $admin->getFTAN() : "",
+	"leptoken"			=> (isset($_REQUEST['leptoken'])) ? $_REQUEST['leptoken'] : "0",
 	"title"			=> $post_data['title'],
 	"text"			=> ($class=="post") 
 		? $post_data['text'] 
 		: $database->get_one( "SELECT `text` from `".TABLE_PREFIX."mod_forum_post` where `threadid`=".$postid)
 );
 
-$source = file_get_contents( dirname(__FILE__)."/templates/edit_post.tmpl");
+$source = file_get_contents( dirname(__FILE__)."/templates/edit_post.lte");
 foreach($values as $key=>$value){
 	$source = str_replace("{{ ".$key." }}", $value, $source);
 }
 
 echo $source;
+
+$admin->print_footer();
 ?>
