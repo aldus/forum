@@ -29,8 +29,7 @@ if (defined('LEPTON_PATH')) {
 }
 // end include class.secure.php
 
-if(!defined('SKIP_CACHE')) define('SKIP_CACHE', 1);
-require_once(LEPTON_PATH . '/modules/forum/backend.php');
+require(LEPTON_PATH.'/modules/admin.php');		
 
 /**
  *        Load Language file
@@ -44,64 +43,29 @@ require_once ( !file_exists($lang) ? (dirname(__FILE__))."/languages/EN.php" : $
 global $parser, $loader,$twig_modul_namespace;
 require( dirname(__FILE__)."/register_parser.php" );
 
-$forums = $database->query("SELECT * FROM `" . TABLE_PREFIX . "mod_forum_forum` WHERE `section_id` = '".$section_id."' AND `page_id` = '".$page_id."' ORDER BY `displayorder` ASC");
 
-if($database->is_error()) {
-	/**
-	 *	There has been an error during the last query: 
-	 */
-	$message = $database->get_error();
-	$forum_list = "";
-} elseif (0 == $forums->numRows()) {
+require_once( dirname(__FILE__)."/libs/parsedown/Parsedown.php");
+$source = file_get_contents( dirname(__FILE__)."/README.md");
+$Parsedown = new Parsedown();
+$html = $Parsedown->text($source);
 
-	/**
-	 *	No results found - no forums to list here
-	 */
-	$message = $MOD_FORUM['TXT_NO_FORUMS_B'];
-	$forums_list = "";
-	
-} else {
 
-	/**
-	 *	List the forums
-	 *	
-	 */
-	$message = "";
-	
-	ob_start();
-	$forum_array = array();
-	while ($forum = $forums->fetchRow( MYSQL_ASSOC ))
-	{
-		$forum_array[ $forum['parentid'] ][ $forum['forumid'] ] = $forum;
-	}
-
-	// Zuordnung Foren -> Level:
-	$arrLevel = getForumLevel();
-
-	print_forums(0);
-
-	$forums_list = "<ul class='forum_list'>".ob_get_clean()."</ul>";
-}
-
-/**
- *	Collecting the values/datas for the page
- */
-$page_data = array(
-	'LEPTON_PATH' => LEPTON_PATH,
-	'LEPTON_URL' => LEPTON_URL,
+$page_values = array(
+	'LEPTON_URL'	=> LEPTON_URL,
+	'ADMIN_URL'		=> ADMIN_URL,
+	'TEXT_OK'		=> 'Ok',
 	'section_id'	=> $section_id,
-	'page_id'	=> $page_id,
-	'MOD_FORUM_TXT_CREATE_FORUM_B'	=> $MOD_FORUM['TXT_CREATE_FORUM_B'],
-	'MOD_FORUM_TXT_FORUMS_B'	=> $MOD_FORUM['TXT_FORUMS_B'],
-	'TEXT_HELP'	=> $MENU["HELP"],
-	'TEXT_SETTINGS'	=> $TEXT['SETTINGS'],
-	'message'		=> $message,
-	'forums_list'	=> $forums_list
+	'page_id'		=> $page_id,
+	'content'		=> $html,
+	'leptoken'	=> (isset($_REQUEST['leptoken']) ?  $_REQUEST['leptoken'] : 0)
 );
 
 echo $parser->render(
-	$twig_modul_namespace."/modify.lte",
-	$page_data
+	$twig_modul_namespace."/help.lte",
+	$page_values
 );
+
+
+$admin->print_footer();
 
 ?>

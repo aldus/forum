@@ -25,6 +25,7 @@ $files_to_register = array(
 	'/modules/forum/edit_post.php',
 	'/modules/forum/forum_view.php',
 	'/modules/forum/functions.php',
+	'/modules/forum/help.php',
 	'/modules/forum/include_search.LIKE-Version.php',
 	'/modules/forum/include_search.php',
 	'/modules/forum/include_searchform.php',
