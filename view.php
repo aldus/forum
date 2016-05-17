@@ -57,7 +57,7 @@ else
 		$forumcache= array();
 		$iforumcache = array();
 		
-	} elseif(is_array($forumcache)){
+	} elseif( (true === is_array($forumcache)) && (count($forumcache) > 0)){
 		$forum_counts_query = $database->query("
 			SELECT forumid, COUNT(threadid) AS threadcount
 			FROM " . TABLE_PREFIX . "mod_forum_thread

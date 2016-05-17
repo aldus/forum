@@ -29,7 +29,7 @@ if (defined('LEPTON_PATH')) {
 }
 // end include class.secure.php
 
-define('SKIP_CACHE', 1);
+if(!defined('SKIP_CACHE')) define('SKIP_CACHE', 1);
 require_once(LEPTON_PATH . '/modules/forum/backend.php');
 
 /**
